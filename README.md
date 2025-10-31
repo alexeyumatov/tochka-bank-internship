@@ -1,3 +1,1 @@
 ## Internship Task
-
-Tochka bank
