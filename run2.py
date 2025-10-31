@@ -101,17 +101,17 @@ def solve(edges: list[tuple[str, str]]) -> list[str]:
 
         # выбираем какой корридор отключить
         if next_virus_pos.isupper():
+            # Если следующая позиция - шлюз, отключаем его от текущей позиции
             result.append(f"{next_virus_pos}-{virus_pos}")
             graph[next_virus_pos].discard(virus_pos)
             graph[virus_pos].discard(next_virus_pos)
             gateways.discard(next_virus_pos)
         else:
+            # Иначе отключаем коридор от целевого шлюза (лексикографически минимальный)
             corridors = []
-
-            for gateway in sorted(gateways):
-                for neighbour in sorted(graph[gateway]):
-                    if not neighbour.isupper():
-                        corridors.append((gateway, neighbour))
+            for neighbour in sorted(graph[target_gateway]):
+                if not neighbour.isupper():
+                    corridors.append((target_gateway, neighbour))
 
             if len(corridors) != 0:
                 disconnect_gateway, disconnect_node = corridors[0]
