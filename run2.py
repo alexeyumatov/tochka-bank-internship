@@ -83,13 +83,14 @@ def solve(edges: list[tuple[str, str]]) -> list[str]:
         reachable_gateways = []
         for gateway in gateways:
             if gateway in distances:
-                reachable_gateways.append(gateway)
+                reachable_gateways.append((distances[gateway], gateway))
 
         if len(reachable_gateways) == 0:
             break
 
+        # сортируем по расстоянию, затем лексикографически
         reachable_gateways.sort()
-        target_gateway = reachable_gateways[0]
+        target_gateway = reachable_gateways[0][1]
 
         # находим следующую позицию вируса исходя из ближайшего шлюза
         next_virus_pos = find_virus_next_pos(
@@ -125,13 +126,14 @@ def solve(edges: list[tuple[str, str]]) -> list[str]:
         reachable_gateways = []
         for gateway in gateways:
             if gateway in distances:
-                reachable_gateways.append(gateway)
+                reachable_gateways.append((distances[gateway], gateway))
 
         if len(reachable_gateways) == 0:
             break
 
+        # сортируем по расстоянию, затем лексикографически
         reachable_gateways.sort()
-        target_gateway = reachable_gateways[0]
+        target_gateway = reachable_gateways[0][1]
 
         virus_pos = find_virus_next_pos(
             graph, virus_pos, target_gateway, distances
