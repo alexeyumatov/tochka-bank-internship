@@ -100,38 +100,24 @@ def solve(edges: list[tuple[str, str]]) -> list[str]:
             break
 
         # выбираем какой корридор отключить
-        corridors = []
-        for neighbour in sorted(graph[target_gateway]):
-            if not neighbour.isupper():
-                corridors.append((target_gateway, neighbour))
+        nodes_on_path = []
+        for neighbor in graph[target_gateway]:
+            if not neighbor.isupper():
+                if neighbor in distances:
+                    if distances[neighbor] + 1 == distances[target_gateway]:
+                        nodes_on_path.append(neighbor)
 
-        if len(corridors) != 0:
-            corridors.sort()
-            disconnect_gateway, disconnect_node = corridors[0]
-            result.append(f"{disconnect_gateway}-{disconnect_node}")
-            graph[disconnect_gateway].discard(disconnect_node)
-            graph[disconnect_node].discard(disconnect_gateway)
+        if len(nodes_on_path) == 0:
+            break
+
+        nodes_on_path.sort()
+        disconnect_node = nodes_on_path[0]
+        result.append(f"{target_gateway}-{disconnect_node}")
+        graph[target_gateway].discard(disconnect_node)
+        graph[disconnect_node].discard(target_gateway)
 
         # пересчитываем путь и перемещаем вирус
-        distances = bfs_search(graph, virus_pos)
-
-        reachable_gateways = []
-        for gateway in gateways:
-            if gateway in distances:
-                reachable_gateways.append((distances[gateway], gateway))
-
-        if len(reachable_gateways) == 0:
-            break
-
-        reachable_gateways.sort()
-        min_distance, target_gateway = reachable_gateways[0]
-
-        virus_pos = find_virus_next_pos(
-            graph, virus_pos, target_gateway, distances
-        )
-
-        if virus_pos is None:
-            break
+        virus_pos = next_virus_pos
 
     return result
 
